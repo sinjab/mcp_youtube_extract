@@ -87,7 +87,7 @@ python -m mcp_youtube_extract.server
 ### Running Tests
 
 ```bash
-# Run all pytest tests (3 test files)
+# Run all pytest tests
 uv run pytest
 
 # Run specific pytest test
@@ -100,7 +100,7 @@ uv run pytest --cov=src/mcp_youtube_extract --cov-report=term-missing
 **Note**: The `tests/` directory contains 4 files:
 - `test_context_fix.py` - Pytest test for context API fallback functionality
 - `test_with_api_key.py` - Pytest test for full functionality with API key  
-- `test_youtube_unit.py` - **Unit tests** for core YouTube functionality (new)
+- `test_youtube_unit.py` - **Unit tests** for core YouTube functionality
 - `test_inspector.py` - **Standalone inspection script** (not a pytest test)
 
 **Test Coverage**: The project currently has 62% overall coverage with excellent coverage of core functionality:
@@ -131,6 +131,13 @@ The server provides one main tool: `get_yt_video_info`
 This tool takes a YouTube video ID and returns:
 - Video metadata (title, description, channel, publish date)
 - Video transcript (with fallback logic for different transcript types)
+
+**Example Usage:**
+```python
+# Extract video ID from YouTube URL: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+video_id = "dQw4w9WgXcQ"
+result = get_yt_video_info(video_id)
+```
 
 ### Client Configuration
 
@@ -177,6 +184,7 @@ mcp_youtube_extract/
 ├── .env                       # Environment variables (create from .env.example)
 ├── .gitignore                 # Git ignore rules (includes coverage files)
 ├── pyproject.toml
+├── LICENSE                    # MIT License
 └── README.md
 ```
 
@@ -208,8 +216,23 @@ uv run hatch build
 
 ## License
 
-[Your chosen license]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Getting Started
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Support
+
+If you encounter any issues or have questions, please:
+1. Check the [existing issues](https://github.com/sinjab/mcp_youtube_extract/issues)
+2. Create a new issue with detailed information about your problem
+3. Include logs and error messages when applicable
