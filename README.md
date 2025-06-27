@@ -103,6 +103,59 @@ export YOUTUBE_API_KEY=your_youtube_api_key_here
 **Required:**
 - `YOUTUBE_API_KEY`: Your YouTube Data API key (required for video metadata)
 
+### Getting Your YouTube API Key
+
+To use this MCP server, you'll need a YouTube Data API key. Here's how to get one:
+
+#### Step 1: Create a Google Cloud Project
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Click "Select a project" at the top of the page
+3. Click "New Project" and give it a name (e.g., "MCP YouTube Extract")
+4. Click "Create"
+
+#### Step 2: Enable the YouTube Data API
+
+1. In your new project, go to the [API Library](https://console.cloud.google.com/apis/library)
+2. Search for "YouTube Data API v3"
+3. Click on it and then click "Enable"
+
+#### Step 3: Create API Credentials
+
+1. Go to the [Credentials page](https://console.cloud.google.com/apis/credentials)
+2. Click "Create Credentials" and select "API Key"
+3. Your new API key will be displayed - copy it immediately
+4. Click "Restrict Key" to secure it (recommended)
+
+#### Step 4: Restrict Your API Key (Recommended)
+
+1. In the API key settings, click "Restrict Key"
+2. Under "API restrictions", select "Restrict key"
+3. Choose "YouTube Data API v3" from the dropdown
+4. Click "Save"
+
+#### Step 5: Set Up Billing (Required)
+
+1. Go to the [Billing page](https://console.cloud.google.com/billing)
+2. Link a billing account to your project
+3. **Note**: YouTube Data API has a free tier of 10,000 units per day, which is typically sufficient for most use cases
+
+#### API Key Usage Limits
+
+- **Free Tier**: 10,000 units per day
+- **Cost**: $5 per 1,000 units after free tier
+- **Typical Usage**: 
+  - Getting video info: ~1 unit per request
+  - Getting transcripts: ~1 unit per request
+  - Most users stay well within the free tier
+
+#### Security Best Practices
+
+- **Never commit your API key** to version control
+- **Use environment variables** as shown in the configuration section
+- **Restrict your API key** to only the YouTube Data API
+- **Monitor usage** in the Google Cloud Console
+
 ## Usage
 
 ### Running the MCP Server
