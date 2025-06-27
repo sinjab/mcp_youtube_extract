@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp_youtube_extract"
+version = "0.1.0"
+description = "A Model Context Protocol (MCP) server for YouTube operations"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp>=1.6.0",
+    "youtube-transcript-api>=1.1.0",
+    "google-api-python-client>=2.172.0",
+]
+
+[project.scripts]
+mcp_youtube_extract = "mcp_youtube_extract.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_youtube_extract"]
+
+[dependency-groups]
+dev = [
+    "mcp[cli]>=1.6.0",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=6.2.1",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
