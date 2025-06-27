@@ -1,5 +1,5 @@
 """
-Centralized logger for MCP LanceDB - provides consistent logging across all modules
+Centralized logger - provides consistent logging across all modules
 """
 
 import logging
