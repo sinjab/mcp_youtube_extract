@@ -1,5 +1,10 @@
 # MCP YouTube Extract
 
+[![PyPI version](https://badge.fury.io/py/mcp-youtube-extract.svg)](https://badge.fury.io/py/mcp-youtube-extract)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 A Model Context Protocol (MCP) server for YouTube operations, demonstrating core MCP concepts including tools and logging.
 
 ## Features
@@ -13,9 +18,41 @@ A Model Context Protocol (MCP) server for YouTube operations, demonstrating core
   - Get video transcripts with intelligent fallback logic
   - Support for both manually created and auto-generated transcripts
 
+## 📦 Available on PyPI
+
+This package is now available on PyPI! You can install it directly with:
+
+```bash
+pip install mcp-youtube-extract
+```
+
+Visit the package page: [mcp-youtube-extract on PyPI](https://pypi.org/project/mcp-youtube-extract/)
+
 ## Installation
 
-### Using uv (Recommended)
+### Quick Start (Recommended)
+
+The easiest way to get started is to install from PyPI:
+
+```bash
+pip install mcp-youtube-extract
+```
+
+Or using pipx (recommended for command-line tools):
+
+```bash
+pipx install mcp-youtube-extract
+```
+
+This will install the latest version with all dependencies. You can then run the MCP server directly:
+
+```bash
+mcp_youtube_extract
+```
+
+### Using uv (Development)
+
+For development or if you prefer uv:
 
 ```bash
 # Install uv if you haven't already
@@ -31,12 +68,6 @@ uv sync --dev
 # Set up your API key for development
 cp .env.example .env
 # Edit .env and add your YouTube API key
-```
-
-### Using pip
-
-```bash
-pip install mcp_youtube_extract
 ```
 
 ### From source
@@ -75,6 +106,18 @@ export YOUTUBE_API_KEY=your_youtube_api_key_here
 ## Usage
 
 ### Running the MCP Server
+
+#### Using PyPI Installation (Recommended)
+
+```bash
+# Install from PyPI
+pip install mcp-youtube-extract
+
+# Run the server
+mcp_youtube_extract
+```
+
+#### Using Development Setup
 
 ```bash
 # Using uv
@@ -142,6 +185,23 @@ result = get_yt_video_info(video_id)
 ### Client Configuration
 
 To use this MCP server with a client, add the following configuration to your client's settings:
+
+#### Using PyPI Installation (Recommended)
+
+```json
+{
+  "mcpServers": {
+    "mcp_youtube_extract": {
+      "command": "mcp_youtube_extract",
+      "env": {
+        "YOUTUBE_API_KEY": "your_youtube_api_key"
+      }
+    }
+  }
+}
+```
+
+#### Using Development Setup
 
 ```json
 {
