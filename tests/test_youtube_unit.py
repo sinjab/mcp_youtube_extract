@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from src.mcp_youtube_extract import youtube
 
 # Test get_video_info
-@patch('src.mcp_youtube_extract.youtube.build')
+@patch('src.mcp_youtube_extract.google_api.build')
 def test_get_video_info_success(mock_build):
     mock_youtube = MagicMock()
     mock_request = MagicMock()
@@ -22,7 +22,7 @@ def test_get_video_info_success(mock_build):
     result = youtube.get_video_info('fake_api_key', 'fake_video_id')
     assert result['snippet']['title'] == 'Test Title'
 
-@patch('src.mcp_youtube_extract.youtube.build')
+@patch('src.mcp_youtube_extract.google_api.build')
 def test_get_video_info_not_found(mock_build):
     mock_youtube = MagicMock()
     mock_request = MagicMock()
@@ -32,39 +32,59 @@ def test_get_video_info_not_found(mock_build):
     result = youtube.get_video_info('fake_api_key', 'fake_video_id')
     assert result is None
 
-@patch('src.mcp_youtube_extract.youtube.build', side_effect=Exception('API error'))
+@patch('src.mcp_youtube_extract.google_api.build', side_effect=Exception('API error'))
 def test_get_video_info_error(mock_build):
     result = youtube.get_video_info('fake_api_key', 'fake_video_id')
     assert result is None
 
-# Test get_video_transcript
-@patch('src.mcp_youtube_extract.youtube.YouTubeTranscriptApi')
-def test_get_video_transcript_success(mock_api):
-    mock_list = MagicMock()
-    mock_transcript = MagicMock()
-    mock_transcript.is_generated = True
-    mock_transcript.language_code = 'en'
-    mock_transcript.fetch.return_value = [{'text': 'Hello world'}]
-    mock_list.__iter__.return_value = iter([mock_transcript])
-    mock_list.find_transcript.side_effect = Exception('Not found')
-    mock_api.list_transcripts.return_value = mock_list
-    with patch('src.mcp_youtube_extract.youtube.TextFormatter') as mock_formatter:
-        mock_formatter.return_value.format_transcript.return_value = 'Hello world'
-        result = youtube.get_video_transcript('fake_video_id')
-        assert 'Hello world' in result
-
-@patch('src.mcp_youtube_extract.youtube.YouTubeTranscriptApi')
-def test_get_video_transcript_no_transcript(mock_api):
-    mock_list = MagicMock()
-    mock_list.__iter__.side_effect = StopIteration
-    mock_api.list_transcripts.return_value = mock_list
+# Test get_video_transcript - Updated for yt-ts-extract
+@patch('src.mcp_youtube_extract.transcript_api.get_transcript')
+@patch('src.mcp_youtube_extract.transcript_api.get_transcript_text')
+@patch('src.mcp_youtube_extract.transcript_api.get_available_languages')
+@patch('src.mcp_youtube_extract.transcript_api.YouTubeTranscriptExtractor')
+def test_get_video_transcript_success(mock_extractor_class, mock_get_langs, mock_get_text, mock_get_transcript):
+    # Mock the extractor instance
+    mock_extractor = MagicMock()
+    mock_extractor_class.return_value = mock_extractor
+    
+    # Mock available languages
+    mock_get_langs.return_value = [{'code': 'en'}]
+    
+    # Mock transcript segments
+    mock_transcript = [{'text': 'Hello world'}]
+    mock_extractor.get_transcript.return_value = mock_transcript
+    
     result = youtube.get_video_transcript('fake_video_id')
-    assert 'Could not retrieve transcript' in result
+    assert 'Hello world' in result
 
-@patch('src.mcp_youtube_extract.youtube.YouTubeTranscriptApi')
-def test_get_video_transcript_error(mock_api):
-    # Mock the list_transcripts method to raise an exception
-    mock_api.list_transcripts.side_effect = Exception('API error')
+@patch('src.mcp_youtube_extract.transcript_api.get_transcript')
+@patch('src.mcp_youtube_extract.transcript_api.get_transcript_text')
+@patch('src.mcp_youtube_extract.transcript_api.get_available_languages')
+@patch('src.mcp_youtube_extract.transcript_api.YouTubeTranscriptExtractor')
+def test_get_video_transcript_no_transcript(mock_extractor_class, mock_get_langs, mock_get_text, mock_get_transcript):
+    # Mock the extractor instance
+    mock_extractor = MagicMock()
+    mock_extractor_class.return_value = mock_extractor
+    
+    # Mock available languages
+    mock_get_langs.return_value = []
+    
+    # Mock all transcript methods to return None/empty
+    mock_extractor.get_transcript.return_value = None
+    mock_get_transcript.return_value = None
+    mock_get_text.return_value = None
+    
+    result = youtube.get_video_transcript('fake_video_id')
+    assert result is None
+
+@patch('src.mcp_youtube_extract.transcript_api.get_transcript')
+@patch('src.mcp_youtube_extract.transcript_api.get_transcript_text')
+@patch('src.mcp_youtube_extract.transcript_api.get_available_languages')
+@patch('src.mcp_youtube_extract.transcript_api.YouTubeTranscriptExtractor')
+def test_get_video_transcript_error(mock_extractor_class, mock_get_langs, mock_get_text, mock_get_transcript):
+    # Mock the extractor class to raise an exception
+    mock_extractor_class.side_effect = Exception('API error')
+    
     result = youtube.get_video_transcript('fake_video_id')
     assert 'Could not retrieve transcript' in result
 

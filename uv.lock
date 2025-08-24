@@ -176,15 +176,6 @@ wheels = [
 ]
 
 [[package]]
-name = "defusedxml"
-version = "0.7.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0f/d5/c66da9b79e5bdb124974bfe172b4daf3c984ebd9c2a06e2b8a4dc7331c72/defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69", size = 75520 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/07/6c/aa3f2f849e01cb6a001cd8554a88d4c77c5c1a31c95bdf1cf9301e6d9ef4/defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61", size = 25604 },
-]
-
-[[package]]
 name = "distlib"
 version = "0.3.9"
 source = { registry = "https://pypi.org/simple" }
@@ -556,7 +547,7 @@ source = { editable = "." }
 dependencies = [
     { name = "google-api-python-client" },
     { name = "mcp" },
-    { name = "youtube-transcript-api" },
+    { name = "yt-ts-extract" },
 ]
 
 [package.dev-dependencies]
@@ -574,7 +565,7 @@ dev = [
 requires-dist = [
     { name = "google-api-python-client", specifier = ">=2.172.0" },
     { name = "mcp", specifier = ">=1.6.0" },
-    { name = "youtube-transcript-api", specifier = ">=1.1.0" },
+    { name = "yt-ts-extract", specifier = ">=1.0.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -1238,16 +1229,15 @@ wheels = [
 ]
 
 [[package]]
-name = "youtube-transcript-api"
-version = "1.1.0"
+name = "yt-ts-extract"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "defusedxml" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/36/dd/10d413b20a2d14fa483853d0f6d920a0a0a6887d7c60167e4641733f99fb/youtube_transcript_api-1.1.0.tar.gz", hash = "sha256:786d9e64bd7fffee0dbc1471a61a798cebdc379b9cf8f7661d3664e831fcc1a5", size = 470144 }
+sdist = { url = "https://files.pythonhosted.org/packages/5b/50/aa40da1178ed298d79a2daf940369798aedb5c70123e6aca2500c06f2968/yt_ts_extract-1.0.0.tar.gz", hash = "sha256:6df9f8000f76bc89868694584c5a23c6db54a34a85488d2e3adec22096d83ee5", size = 45906 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/69/63f1b9f96a9d3b6bd35288fe27f987c41bd157e47b3d07ca025549e3f8e6/youtube_transcript_api-1.1.0-py3-none-any.whl", hash = "sha256:876ac42b1e3f8cc99b81d8fd810bd74ed07511e51dff5db50e714e3156ad3595", size = 485739 },
+    { url = "https://files.pythonhosted.org/packages/92/71/786d412d6374b294c85fa77349fa351069035abc4085ccf7d2be81a6737a/yt_ts_extract-1.0.0-py3-none-any.whl", hash = "sha256:ef4747edba10b629a1d1a1471532e7b0de97b331b5b201df25759c4facb027df", size = 28017 },
 ]
 
 [[package]]
