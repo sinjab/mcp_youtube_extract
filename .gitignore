@@ -23,5 +23,8 @@ logs/
 # Environment variables
 .env
 
-# CLAUDE documentation
+# CLAUDE stuff
 CLAUDE.md
+.claude/
+
+uv.lock

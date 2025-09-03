@@ -27,14 +27,9 @@ def get_yt_video_info(video_id: str) -> str:
     """
     logger.info(f"MCP tool called: get_yt_video_info with video_id: {video_id}")
     
-    # Try to get API key from environment variable first, then from context
-    api_key = os.getenv("YOUTUBE_API_KEY")
+    # yt-info-extract doesn't require API key, but keep API key optional for compatibility
+    api_key = os.getenv("YOUTUBE_API_KEY", "")
     
-    if not api_key:
-        logger.error("YOUTUBE_API_KEY not configured in server settings")
-        return "Error: YOUTUBE_API_KEY not configured. Please set it in the server configuration."
-    
-    logger.info("API_KEY found successfully")
     result = []
     
     try:

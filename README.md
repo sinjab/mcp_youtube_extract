@@ -7,16 +7,19 @@
 
 A Model Context Protocol (MCP) server for YouTube operations, demonstrating core MCP concepts including tools and logging.
 
+**✨ No API Key Required!** Works out of the box using yt-info-extract for video metadata and yt-ts-extract for transcripts.
+
 ## Features
 
 - **MCP Server**: A fully functional MCP server with:
   - **Tools**: Extract information from YouTube videos including metadata and transcripts
   - **Comprehensive Logging**: Detailed logging throughout the application
   - **Error Handling**: Robust error handling with fallback logic for transcripts
-- **YouTube Integration**: Built-in YouTube API capabilities:
-  - Extract video information (title, description, channel, publish date)
+- **YouTube Integration**: Built-in YouTube capabilities using yt-info-extract and yt-ts-extract:
+  - Extract video information (title, description, channel, publish date, view count)
   - Get video transcripts with intelligent fallback logic
   - Support for both manually created and auto-generated transcripts
+  - No API key required for basic functionality
 
 ## 📦 Available on PyPI
 
@@ -87,25 +90,21 @@ cp .env.example .env
 
 ### Environment Variables
 
-For **development**, create a `.env` file in the project root with your YouTube API key:
+**No configuration required!** The server works out of the box using yt-info-extract for metadata extraction.
+
+**Optional:** For enhanced functionality, you can optionally set a YouTube API key:
 
 ```bash
-# YouTube API Configuration
+# Optional YouTube API Configuration
 YOUTUBE_API_KEY=your_youtube_api_key_here
 ```
 
-For **production**, set the environment variable directly in your system:
+**Optional:**
+- `YOUTUBE_API_KEY`: Your YouTube Data API key (optional, provides additional fallback for metadata extraction)
 
-```bash
-export YOUTUBE_API_KEY=your_youtube_api_key_here
-```
+### Getting Your YouTube API Key (Optional)
 
-**Required:**
-- `YOUTUBE_API_KEY`: Your YouTube Data API key (required for video metadata)
-
-### Getting Your YouTube API Key
-
-To use this MCP server, you'll need a YouTube Data API key. Here's how to get one:
+While not required, you can optionally set up a YouTube Data API key for enhanced functionality. Here's how to get one:
 
 #### Step 1: Create a Google Cloud Project
 
@@ -144,10 +143,8 @@ To use this MCP server, you'll need a YouTube Data API key. Here's how to get on
 
 - **Free Tier**: 10,000 units per day
 - **Cost**: $5 per 1,000 units after free tier
-- **Typical Usage**: 
-  - Getting video info: ~1 unit per request
-  - Getting transcripts: ~1 unit per request
-  - Most users stay well within the free tier
+- **Note**: API key is only used as a fallback when yt-info-extract fails
+- Most users won't need an API key as yt-info-extract handles most requests
 
 #### Security Best Practices
 
@@ -225,8 +222,8 @@ This script will:
 The server provides one main tool: `get_yt_video_info`
 
 This tool takes a YouTube video ID and returns:
-- Video metadata (title, description, channel, publish date)
-- Video transcript (with fallback logic for different transcript types)
+- Video metadata (title, description, channel, publish date, view count) via yt-info-extract
+- Video transcript (with fallback logic for different transcript types) via yt-ts-extract
 
 **Example Usage:**
 ```python
@@ -245,6 +242,17 @@ To use this MCP server with a client, add the following configuration to your cl
 {
   "mcpServers": {
     "mcp_youtube_extract": {
+      "command": "mcp_youtube_extract"
+    }
+  }
+}
+```
+
+**With optional API key:**
+```json
+{
+  "mcpServers": {
+    "mcp_youtube_extract": {
       "command": "mcp_youtube_extract",
       "env": {
         "YOUTUBE_API_KEY": "your_youtube_api_key"
@@ -256,6 +264,23 @@ To use this MCP server with a client, add the following configuration to your cl
 
 #### Using Development Setup
 
+```json
+{
+  "mcpServers": {
+    "mcp_youtube_extract": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "<your-project-directory>",
+        "run",
+        "mcp_youtube_extract"
+      ]
+    }
+  }
+}
+```
+
+**With optional API key:**
 ```json
 {
   "mcpServers": {
@@ -285,7 +310,9 @@ mcp_youtube_extract/
 │   └── mcp_youtube_extract/
 │       ├── __init__.py
 │       ├── server.py          # MCP server implementation
-│       ├── youtube.py         # YouTube API utilities
+│       ├── google_api.py      # yt-info-extract integration
+│       ├── transcript_api.py  # yt-ts-extract integration
+│       ├── youtube.py         # Unified API facade
 │       └── logger.py          # Logging configuration
 ├── tests/
 │   ├── __init__.py
@@ -305,15 +332,16 @@ mcp_youtube_extract/
 
 The project uses a comprehensive testing approach:
 
-1. **Unit Tests** (`test_youtube_unit.py`): Test core YouTube functionality with mocked APIs
+1. **Unit Tests** (`test_youtube_unit.py`): Test core YouTube functionality with mocked yt-info-extract
 2. **Integration Tests** (`test_context_fix.py`, `test_with_api_key.py`): Test full server functionality
 3. **Manual Validation** (`test_inspector.py`): Interactive server inspection tool
 
 ### Error Handling
 
 The project includes robust error handling:
-- **Graceful API failures**: Returns appropriate error messages instead of crashing
-- **Fallback logic**: Multiple strategies for transcript retrieval
+- **Graceful extraction failures**: Returns appropriate error messages instead of crashing
+- **Multiple fallback strategies**: yt-info-extract provides automatic fallback between YouTube Data API, yt-dlp, and pytubefix
+- **Transcript fallback logic**: Multiple strategies for transcript retrieval via yt-ts-extract
 - **Consistent error responses**: Standardized error message format
 - **Comprehensive logging**: Detailed logs for debugging and monitoring
 

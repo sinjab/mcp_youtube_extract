@@ -3,37 +3,26 @@ from unittest.mock import patch, MagicMock
 from src.mcp_youtube_extract import youtube
 
 # Test get_video_info
-@patch('src.mcp_youtube_extract.google_api.build')
-def test_get_video_info_success(mock_build):
-    mock_youtube = MagicMock()
-    mock_request = MagicMock()
-    mock_request.execute.return_value = {
-        'items': [{
-            'snippet': {
-                'title': 'Test Title',
-                'channelTitle': 'Test Channel',
-                'publishedAt': '2020-01-01T00:00:00Z',
-                'description': 'Test Description'
-            }
-        }]
+@patch('src.mcp_youtube_extract.google_api.yt_get_video_info')
+def test_get_video_info_success(mock_yt_get_video_info):
+    mock_yt_get_video_info.return_value = {
+        'title': 'Test Title',
+        'channel_name': 'Test Channel',
+        'publication_date': '2020-01-01T00:00:00Z',
+        'description': 'Test Description',
+        'views': 1000000
     }
-    mock_youtube.videos.return_value.list.return_value = mock_request
-    mock_build.return_value = mock_youtube
     result = youtube.get_video_info('fake_api_key', 'fake_video_id')
-    assert result['snippet']['title'] == 'Test Title'
+    assert result['title'] == 'Test Title'
 
-@patch('src.mcp_youtube_extract.google_api.build')
-def test_get_video_info_not_found(mock_build):
-    mock_youtube = MagicMock()
-    mock_request = MagicMock()
-    mock_request.execute.return_value = {'items': []}
-    mock_youtube.videos.return_value.list.return_value = mock_request
-    mock_build.return_value = mock_youtube
+@patch('src.mcp_youtube_extract.google_api.yt_get_video_info')
+def test_get_video_info_not_found(mock_yt_get_video_info):
+    mock_yt_get_video_info.return_value = None
     result = youtube.get_video_info('fake_api_key', 'fake_video_id')
     assert result is None
 
-@patch('src.mcp_youtube_extract.google_api.build', side_effect=Exception('API error'))
-def test_get_video_info_error(mock_build):
+@patch('src.mcp_youtube_extract.google_api.yt_get_video_info', side_effect=Exception('API error'))
+def test_get_video_info_error(mock_yt_get_video_info):
     result = youtube.get_video_info('fake_api_key', 'fake_video_id')
     assert result is None
 
@@ -91,18 +80,18 @@ def test_get_video_transcript_error(mock_extractor_class, mock_get_langs, mock_g
 # Test format_video_info
 def test_format_video_info_success():
     video_info = {
-        'snippet': {
-            'title': 'Test Title',
-            'channelTitle': 'Test Channel',
-            'publishedAt': '2020-01-01T00:00:00Z',
-            'description': 'Test Description'
-        }
+        'title': 'Test Title',
+        'channel_name': 'Test Channel',
+        'publication_date': '2020-01-01T00:00:00Z',
+        'description': 'Test Description',
+        'views': 1000000
     }
     result = youtube.format_video_info(video_info)
     assert 'Test Title' in result
     assert 'Test Channel' in result
     assert '2020-01-01T00:00:00Z' in result
     assert 'Test Description' in result
+    assert '1,000,000' in result
 
 def test_format_video_info_none():
     result = youtube.format_video_info(None)
